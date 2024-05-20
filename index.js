@@ -24,6 +24,26 @@ function leerArchivo(file) {
 
 try {
   leerArchivo(fileJson);
+  console.log(jsonArray);
+
+  app.get("/stock/:stock(\\d+)", (req, res) => {
+    let stockNumber = parseInt(req.params.stock, 10);
+
+    let totalStock = [];
+    if (stockNumber !== 0) {
+      let sumarStock = jsonArray.filter((el) => el.stock === stockNumber);
+
+      totalStock = sumarStock;
+    }
+
+    totalStock.length > 0 ? res.json(totalStock) : res.json("no hay stock");
+  });
+} catch (error) {
+  console.error("Error al leer o convertir el archivo JSON:", error);
+}
+
+try {
+  leerArchivo(fileJson);
 
   app.get("/catalogo", (req, res) => {
     const datosSort = jsonArray.sort((a, b) => {
@@ -67,3 +87,7 @@ try {
 } catch (error) {
   console.error("Error al leer o convertir el archivo JSON:", error);
 }
+
+app.get("*", (req, res) => {
+  res.status(404).send("Lo siento, la página que buscas no existe.");
+});
